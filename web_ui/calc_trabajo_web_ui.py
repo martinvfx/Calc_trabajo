@@ -1,4 +1,4 @@
-import logging, time, os
+import logging
 import justpy as jp
 
 from operations.functions import tiempos as operations_tiempos
@@ -10,15 +10,17 @@ logging.basicConfig(level=logging.WARN)
 
 ## Description of elements styles attributes.
 bbox_style = 'm-2 p-2 h-132 text-xl border-2 background-gray-300 text-white'
-inbox_style = "flex m-1 h-6  text-sm bg-gray-200 font-mono font-bold border-2 border-gray-200 rounded px-4 text-gray-700 focus:outline-none focus:bg-white focus:border-purple-500"
+inbox_style = "flex m-1 h-6 text-base sm:text-xl lg:text-sm bg-gray-200  w-full font-mono font-bold border-2 border-gray-200 rounded px-2 text-gray-700 focus:outline-none focus:bg-white focus:border-purple-500"
 boton_style = "p-4 font-bold text-black bg-gray-500 border-2 border-gray  hover:bg-blue-300 rounded"
 message_classes = 'ml-4 p-2 text-lg text-white overflow-auto font-mono rounded-lg'
-label_item_clas = inbox_style.rsplit('bg-')[0]  # resuse of inbox style classes
+label_item_clas = inbox_style.rsplit('bg-')[0]  # re-use of inbox style classes
 cell_style = 'flex-col p-2 flex-grow-0  flex-shrink-0'
 
+logo_url = 'http://vfx-sup.com/wp-content/uploads/2017/05/CucardaVFXsup_fdoNegro-e1495057122527.png' # "http://vfx-sup.com/wp-content/uploads/2017/05/CucardaVFXsup-150x150.png"
+
 head_div = jp.Div(classes='m-2 flex border border-gray-800 overflow-auto', delete_flag=False)
-logolink = jp.A(a=head_div, href='http://vfx-sup.com', target='_blank') #
-logo = jp.Img(a=logolink, src='http://vfx-sup.com/wp-content/uploads/2017/05/CucardaVFXsup_fdoNegro-e1495057122527.png', classes="m-2 box-border object-left object-contain h-10") #TO-DO agregar link y un about a la main page .
+logolink = jp.A( href='http://vfx-sup.com', target='_blank') #
+logo = jp.Img(a=logolink, src=logo_url, classes="m-2 box-border object-left object-contain h-10") #TO-DO agregar link y un about a la main page .
 info_link_box = jp.Div(classes ='justify-end')
 info_link = jp.A(a=info_link_box, text='Info adicional', href='http://vfx-sup.com', title='Información del autor y de uso', classes='text-gray-800 align-middle text-xs text-right font-style: italic justify-end px-8') # , target='_blank' invisible bg-gray-900 border-2 border-gray-700
 title_to_show = jp.P( text="Calculador de jornadas de filmación", classes='m-4 text-xl font-bold text-white overflow-auto')
@@ -26,24 +28,24 @@ result_display = jp.Div( name='result_display',  classes='inline-block align-top
 espacios = jp.Space(num=4)
 
 ## input elements
-fee_inbox = jp.Input(name="fee_in", value=0, type='number', title='Indique el costo por jornada acordado en el convernio colectivo o en el contrato\nNo utilizar decimales ni fracciones!', placeholder='honorarios', tabindex=1, classes=inbox_style, delete_flag=False)
+fee_inbox = jp.Input(name="fee_in",  type='number', title='Indique el costo por jornada acordado en el convernio colectivo o en el contrato\nNo utilizar decimales ni fracciones!', placeholder='honorarios', tabindex=1, classes=inbox_style, delete_flag=False)
 fee_label = jp.Label(text='Valor de la jornada regular =', classes=label_item_clas)
 factor_mult_extras_inbox = jp.Input(type='number', title='porcentaje de incremento por hora extra.\nUsualmente es 50%' ,
                                     value=50, tabindex=2, classes=inbox_style, delete_flag=False)
 factor_mult_extras_label = jp.Label(text='Porcentaje por hora extra =', classes=label_item_clas)
 start_workday_label = jp.Label(text='Inicio del trabajo =', classes=label_item_clas)
 end_workday_label = jp.Label(text='Final del trabajo =', classes=label_item_clas)
-start_workday_inbox = jp.Input(name='start_work', type='datetime-local', title='Indicar cuando empezó el trabajo', tabindex=4, classes=inbox_style, delete_flag=False)
-end_workday_inbox = jp.Input(name='end_work', type='datetime-local', title='Indicar cuando finalizó el trabajo', tabindex=5, classes=inbox_style, delete_flag=False) # TO-DO que el end no pueda ser anterior al start day.
+start_workday_inbox = jp.Input(name='start_work', type='datetime-local', title='Indicar cuando empezó el trabajo', tabindex=3, classes=inbox_style, delete_flag=False)
+end_workday_inbox = jp.Input(name='end_work', type='datetime-local', title='Indicar cuando finalizó el trabajo', tabindex=4, classes=inbox_style, delete_flag=False) # TO-DO que el end no pueda ser anterior al start day.
 hs_por_jornada_inbox = jp.Input(type='number', title='Indicar cuantas horas tenés que trabajar diarimente por contrato.\n'
                                                      'Usualmente en cine son 12hs y en TV son 10hs'
-                                , value=12, tabindex=4, classes=inbox_style, delete_flag=False)
+                                , value=12, tabindex=5, classes=inbox_style, delete_flag=False)
 hs_por_jornada_label = jp.Label(text='Horas por jornada regular =', classes=label_item_clas)
 night_check = jp.Input(name='noc_chk', type='checkbox', title='Activarlo si deseas calcular diferenciando las horas nocturnas de las horas regulares.', tabindex=5, classes=inbox_style, delete_flag=False)
 night_hs_label = jp.Label(text='Contabilizar horario nocturno', title='Horario nocturno: de 21 a 06 hs (durante ese lapso se computa 1 hora por cada 50 minutos trabajados)', classes=label_item_clas)
 
 ## Output labes for user info.
-info_area = jp.Div(classes='flex border-gray-900 border-2 px-2 text-xs invisible') #
+info_area = jp.Div(classes='flex border-gray-900 border-2 px-2 text-xs invisible flex-wrap') #
 trab_un_total_label = jp.Label(text='Trabajaste un total de: ', classes=label_item_clas)
 son_extras_label = jp.Label(text='De las cuales, son extras: ', classes=label_item_clas)
 cobrar_hs_extras_label = jp.Label(text='Cobrarías: ', classes=label_item_clas)
@@ -52,7 +54,7 @@ avalorde_label = jp.Label(text='A valor de: ', classes=label_item_clas)
 
 def start_setup():
     # Called once on startup
-    head_div.add(jp.Space(num=25), title_to_show, info_link_box)
+    head_div.add(jp.Space(num=2), logolink, jp.Space(num=25), title_to_show, info_link_box)
 
 
 ## Helper functions for do comunications to the backend.
@@ -60,9 +62,16 @@ def start_setup():
 def change(self, msg):
     self.before = style_ini = self.__getattribute__('classes')
     # print(style_ini )
-    self.set_class('text-white') #visible bg-gray text-lg
+
+    if 'text-white' in self.__getattribute__('classes'):
+        self.set_class('text-gray-900') #visible bg-gray text-lg
+        self.set_class('font-thin')
+    else:
+        self.set_class('text-white')
+        self.set_class('font-bold')
+
     # self.after = print('esto es after change')
-    self.after = self.set_class(style_ini)
+    # self.after = self.set_class(style_ini)
 
 def dates_non_overlap(self, msg):
     # print('funcion overlap ')
@@ -103,9 +112,12 @@ def info_area_fn(self, msg):
     ## funtion to return text labes values.
     def textlabel(self, value):
         txtemp = self.text.rstrip('.0123456789')
+        # print(f"variable txtemp = {txtemp}")
+        # self.delete()
         self.text = txtemp + value
+        # print(f"\nvariable self.text = {self.text}")
         return self.text
-    trab_un_total_label.text = textlabel(trab_un_total_label, str(round(t[2], 1)))
+    trab_un_total_label.text = textlabel(trab_un_total_label, str(round(t[2], 1))) # TO-DO Agregar  + "hs"  al label para que se entiendan las unidades.
     cobrar_hs_extras_label.text  = textlabel(cobrar_hs_extras_label, str(round(result.__getattribute__('ganancia_por_hs_extras'), 2)))
     # cobrar_hs_extras_label.text = f"{cobrar_hs_extras_label.text.split(':')[0]}: ${cobrar_hs_extras_label.text.split(':')[1].lstrip(' ')} por hs extras"
     avalorde_label.text  = textlabel(avalorde_label, str(round(result.__getattribute__('val_hs_extras'), 2)))
@@ -117,8 +129,10 @@ def info_area_fn(self, msg):
 async def web_ui(self):
     wp = jp.WebPage()
     wp.title = 'Calcuador de jornada de Filmación'
-    # wp.favicon = "http://vfx-sup.com/wp-content/uploads/2017/05/CucardaVFXsup-150x150.png"
-    main_div = jp.Div(a=wp , classes='bg-black py-2 px-2')
+    # wp.favicon = logo_url
+    # wp.favicon = "media_assets/VFXsup_150x150.ico"  # TO-FIX si se activa cualquier favicon , la app no funciona en GoogleAE
+
+    main_div = jp.Div(a=wp , classes='bg-black py-2 px-2 rounded-lg shadow-xl lg:max-w-2xl  sm:max-w-full container mx-auto') #  flex   content-center flex-shrink-0 m-auto max-w-xl text-base sm:text-4xl lg:text-base
     main_div.add(head_div)
 
     app_box = jp.Div(a=main_div, classes='flex-col text-white content-center m-2 flex-shrink-0 ')
@@ -128,20 +142,21 @@ async def web_ui(self):
     labels_for_data.add(fee_label, factor_mult_extras_label, start_workday_label, end_workday_label, hs_por_jornada_label, night_hs_label)
     data_input_column.add(fee_inbox, factor_mult_extras_inbox, start_workday_inbox, end_workday_inbox, hs_por_jornada_inbox, night_check)
 
-    pre_info_area = jp.Div(a=app_box, classes='py-2')
+    pre_info_area = jp.Div(a=app_box, classes='py-2  flex flex-no-wrap') #
 
-    result_box = jp.Div(a=app_box, text='Cobrarás en Total =  ', classes=' flex content-start') # w-100
-    result_box.add(result_display)
-    calc_bton =jp.Button(text='Calcular Total', name='Calcular Total', a=app_box, click=result, classes=boton_style) # TO-DO activar la funcionalidad del horario nocturno cuanod de checke.
+    result_box = jp.Div( a=app_box, classes=' flex content-start') #
+    jp.P(text='Cobrarás en Total =  ', a=result_box)
+    result_box.add(jp.Space(num=2), result_display)
+    calc_bton = jp.Button(text='Calcular Total', name='Calcular Total', a=app_box, click=result, classes=boton_style) # TO-DO activar la funcionalidad del horario nocturno cuando se checkee.
     pre_info_area.add(info_area)
 
     end_workday_inbox.on('change', dates_non_overlap)
     fee_inbox.on('change', result)
-
     # calc_bton.on('before', info_area_fn)
     info_link.on('mouseover', change)
+    info_link.on('mouseleave', change)
 
     return wp
 
-# if __name__ == '__main__':
-jp.justpy(web_ui,  websockets=False) # startup=start_setup)
+jp.justpy(web_ui, startup=start_setup, websockets=False) # , start_server=False  ## version de deploy.
+# jp.justpy(web_ui, startup=start_setup, start_server=False) # , websockets=False ## version de testing server uvicorn.

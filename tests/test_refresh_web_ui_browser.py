@@ -10,9 +10,16 @@ from selenium.webdriver.support import expected_conditions as EC
 logging.basicConfig(level=logging.INFO)
 
 weburl = 'http://127.0.0.1:8000/'
-driver = webdriver.Chrome('C:/Program Files (x86)/Google/chromedriver_selenium/chromedriver.exe')
+
+# mobile_emulation = { "deviceName": "iPhone 5" }
+# chrome_options = webdriver.ChromeOptions()
+# chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
+
+driver = webdriver.Chrome('C:/Program Files (x86)/Google/chromedriver_selenium/chromedriver.exe') # ,  desired_capabilities = chrome_options.to_capabilities())
 # driver = webdriver.Edge()
 
+
+# driver = webdriver.Remote(command_executor='http://127.0.0.1:4444/wd/hub', desired_capabilities = chrome_options.to_capabilities())
 
 def start_setup():
     # pasar esta funcion una vez , solo al inicio.
@@ -23,6 +30,9 @@ def start_setup():
     hs_por_jor = 12
     nocturno = False
     driver.get(weburl)
+    driver.set_window_position(55, 55)
+    driver.set_window_size(800, 900)
+
     # WebDriverWait(driver, 1)
     # try:
     #     # WebDriverWait(2,4)
@@ -53,8 +63,6 @@ def start_setup():
 def loop_refresh(refresh_time=10):
     rft = refresh_time
     logging.info(f'\nNOTE: The web browser will be refreshed at {rft}\" intervals ')
-    driver.set_window_position(55, 55)
-    driver.set_window_size(800, 900)
 
     while True:
         time.sleep(rft)
