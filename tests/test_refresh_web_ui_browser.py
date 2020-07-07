@@ -23,7 +23,7 @@ driver = webdriver.Chrome('C:/Program Files (x86)/Google/chromedriver_selenium/c
 
 def start_setup():
     # pasar esta funcion una vez , solo al inicio.
-    val_jor= str(55)
+    val_jor= str(10255)
     porcentaje = 50
     ini_work = "00"+"2020-01-20T18:00"
     end_work = "00"+"2020-01-21T18:00"
@@ -31,7 +31,7 @@ def start_setup():
     nocturno = False
     driver.get(weburl)
     driver.set_window_position(55, 55)
-    driver.set_window_size(800, 900)
+    driver.set_window_size(1100, 900)
 
     # WebDriverWait(driver, 1)
     # try:
@@ -84,6 +84,7 @@ def loop_refresh(refresh_time=10):
                 if len(driver.find_element_by_name('start_work').get_attribute('value')) == 0:
                     logging.info('\nrestarting the setup for refill data')
                     start_setup()
+                driver.find_element_by_name('Calcular Total').click() # temp for test
             else:
                 driver.close()
                 driver.quit()
@@ -97,4 +98,4 @@ def loop_refresh(refresh_time=10):
 
 if __name__ == '__main__':
     start_setup()
-    loop_refresh()
+    loop_refresh(4)
