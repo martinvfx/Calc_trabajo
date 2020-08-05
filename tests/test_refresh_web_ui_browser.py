@@ -23,7 +23,7 @@ driver = webdriver.Chrome('C:/Program Files (x86)/Google/chromedriver_selenium/c
 
 def start_setup():
     # pasar esta funcion una vez , solo al inicio.
-    val_jor= str(10255)
+    val_jor= str(55)
     porcentaje = 50
     ini_work = "00"+"2020-01-20T18:00"
     end_work = "00"+"2020-01-21T18:00"

@@ -3,8 +3,11 @@ import unittest, sys, logging
 sys.path.insert(1, 'C:/Users\Tato\PycharmProjects\Test_General\pyside_Learning\QT_aprendiendo')
 
 # from horario_N import horario_nocturno_scratch_1
-from QT_aprendiendo.calc_hs_trabajo import principal
-from QT_aprendiendo.calc_hs_trabajo import tiempos, night_working_hours
+from calc_hs_trabajo import principal
+# from QT_aprendiendo.calc_hs_trabajo import tiempos, night_working_hours
+
+from operations.functions import night_working_hours as op_nwh
+from operations.functions import tiempos as op_tiempos
 from PySide2 import QtCore, QtGui, QtWidgets
 dt = QtCore.QDateTime
 
@@ -24,7 +27,7 @@ class MyTestCase(unittest.TestCase):
         salida = "2020-01-01T05:00"
         hnocturno_checkbox = True
         # capture_results
-        r_fueron_las_horas, r_total_hs_nocturnas, r_hs_trabajadas_totales = principal.night_working_hours(self, entrada, salida, hnocturno_checkbox)
+        r_fueron_las_horas, r_total_hs_nocturnas, r_hs_trabajadas_totales = op_nwh(entrada, salida, hnocturno_checkbox)
 
         self.assertEqual( r_total_hs_nocturnas, 5)  # expected 5
         self.assertEqual( r_hs_trabajadas_totales, 5)   # expected 5
@@ -37,20 +40,20 @@ class MyTestCase(unittest.TestCase):
         hnocturno_checkbox = True
 
         # capture_results
-        r_fueron_las_horas, r_total_hs_nocturnas, r_hs_trabajadas_totales = principal.night_working_hours(self, entrada, salida, hnocturno_checkbox) # , date_entrada=self.date_entrada, date_salida=self.date_salida
+        r_fueron_las_horas, r_total_hs_nocturnas, r_hs_trabajadas_totales = op_nwh( entrada, salida, hnocturno_checkbox) # , date_entrada=self.date_entrada, date_salida=self.date_salida
 
         # self.assertEqual( r_fueron_las_horas , True)
         self.assertEqual( r_total_hs_nocturnas, 2)  # expected 2
         self.assertEqual( r_hs_trabajadas_totales, 2)    # expected 2
 
-    def test_horario_nocturno_noche_pasanto_standartimeISO(self):
+    def test_horario_nocturno_noche_pasando_standartimeISO(self):
         # seteo nuevos horarios
         entrada = "2020-01-10T21:00"
         salida = "2020-01-10T23:00"
         hnocturno_checkbox = True
 
         # capture_results
-        r_fueron_las_horas, r_total_hs_nocturnas, r_hs_trabajadas_totales = principal.night_working_hours(self,entrada, salida, hnocturno_checkbox) # , date_entrada=date_entrada, date_salida=date_salida
+        r_fueron_las_horas, r_total_hs_nocturnas, r_hs_trabajadas_totales = op_nwh( entrada, salida, hnocturno_checkbox)
 
         # self.assertEqual( r_fueron_las_horas , True)
         self.assertEqual( r_total_hs_nocturnas, 2)  # expected 2
@@ -64,10 +67,10 @@ class MyTestCase(unittest.TestCase):
         hnocturno_checkbox = True
 
         # capture_results
-        r_fueron_las_horas, r_total_hs_nocturnas, r_hs_trabajadas_totales = principal.night_working_hours(self, entrada, salida, hnocturno_checkbox)
+        r_fueron_las_horas, r_total_hs_nocturnas, r_hs_trabajadas_totales = op_nwh(  entrada, salida, hnocturno_checkbox)
 
         # self.assertEqual( r_fueron_las_horas , True)
-        self.assertEqual( r_total_hs_nocturnas, 3.98)  # expected 3.98
+        self.assertEqual( r_total_hs_nocturnas, 4)  # expected 4
         self.assertEqual( r_hs_trabajadas_totales, 19)    # expected 19
 
 
@@ -80,7 +83,7 @@ class MyTestCase(unittest.TestCase):
         hnocturno_checkbox = True
 
         # capture_results
-        r_fueron_las_horas, r_total_hs_nocturnas, r_hs_trabajadas_totales = principal.night_working_hours(self, entrada, salida, hnocturno_checkbox)
+        r_fueron_las_horas, r_total_hs_nocturnas, r_hs_trabajadas_totales = op_nwh(entrada, salida, hnocturno_checkbox)
 
         # self.assertEqual( r_fueron_las_horas , True)
         self.assertEqual( r_total_hs_nocturnas, 3.98)  # expected 3.98
@@ -93,15 +96,15 @@ class MyTestCase(unittest.TestCase):
     def test_tiempos_function(self):
         # parametros a testear
         entrada = "2020-01-01T00:00"
-        salida = "2020-01-01T08:00"
+        salida = "2020-01-01T18:00"
         hs_por_jornada = 12
         hnocturno_checkbox = False
 
         # capture_results
-        minutos_tiempo_transcurrido_totaljornada, bloque_de_12hs, r_horas_trasncurridas = tiempos(entrada, salida, hs_por_jornada, hnocturno_checkbox)  # , night_working_hours(self, entrada, salida, hnocturno_checkbox)
+        minutos_tiempo_transcurrido_totaljornada, bloque_de_12hs, r_horas_trasncurridas = op_tiempos(entrada, salida, hs_por_jornada, hnocturno_checkbox)
 
         # self.assertEqual( r_fueron_las_horas , True)
-        self.assertEqual(r_horas_trasncurridas, 8)  # expected 8
+        self.assertEqual(r_horas_trasncurridas, 18)  # expected 8
 
 if __name__ == '__main__':
     unittest.main()

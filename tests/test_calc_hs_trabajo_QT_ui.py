@@ -22,7 +22,7 @@ class MyTestCase(unittest.TestCase):
         self.win.valorjornada_LEd.setText("55")     ## I put an arbritrary journal rate.
 
         # Push Calcular Total button with the left mouse button
-        Calc_hit = self.win.calcular_pbt # self.win.calcular_pbt(self.win.calcular_pbt)
+        Calc_hit = self.win.calcular_pbt
         QtTest.QTest.mouseClick(Calc_hit, QtCore.Qt.LeftButton)
 
         self.assertEqual(self.win.valorjornada_LEd.text(), "55")
@@ -37,13 +37,13 @@ class MyTestCase(unittest.TestCase):
         self.win.hnocturno_checkbox.setChecked(True)
 
         # hit Calcular Total button with the left mouse button
-        Calc_hit = self.win.calcular_pbt # self.win.calcular_pbt(self.win.calcular_pbt)
+        Calc_hit = self.win.calcular_pbt
         QtTest.QTest.mouseClick(Calc_hit, QtCore.Qt.LeftButton)
 
         # self.assertEqual(self.win.valorjornada_LEd.text(), "55")
-        self.assertEqual(round(self.win.TotalaCobrar_LCD.value(), 1), 104.5)
+        self.assertEqual(round(self.win.TotalaCobrar_LCD.value(), 2), 104.5) #
 
-
+## 24hs con horario nocturno chequeado es 149.8 $
 
 if __name__ == '__main__':
     unittest.main()

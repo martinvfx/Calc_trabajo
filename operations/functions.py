@@ -7,8 +7,8 @@ factor_h_nocturna = 1.2 # 20% es el equivalente a la hora de 50min.
 
 def night_working_hours(entrada, salida, hnocturno_checkbox):
     # I will assign two range of hours that is taken as "night time range"
-    io_madrugada = [i.split(":") for i in ["00:00", "05:59"]]
-    io_nocturno = [i.split(":") for i in ["21:00", "23:59"]]
+    io_madrugada = [i.split(":") for i in ["00:00", "06:00"]]
+    io_nocturno = [i.split(":") for i in ["21:00", "23:59"]] #  Tiene que ser "23:59" porque 24:00 no existe y 00:00 da error.
 
     # ========= convirtiendo entrada ==========
     # ent  = entrada.split('T')[1]
@@ -19,13 +19,13 @@ def night_working_hours(entrada, salida, hnocturno_checkbox):
     ent = np.datetime64(entrada)
     sal = np.datetime64(salida)
 
-    # logging.debug("\n entrada es = %s \n salida es = %s" % (ent, sal))
+    logging.debug(f"\n entrada es = {date_entrada} \n salida es = {sal}")
 
     total_worked_hs = float(str(((sal - ent) / 60)).replace("minutes", 'horas').rstrip(" horas"))
     tiempo_trabajado = np.arange(ent, sal, dtype='datetime64[m]')
 
-    horario_madrugada = np.arange(('%sT%s:%s' % (date_entrada, io_madrugada[0][0], io_madrugada[0][1])), ('%sT%s:%s' % (date_entrada, io_madrugada[1][0], io_madrugada[1][1])), dtype='datetime64[m]') # TO-DO revisar acá cuando cambie date_entrada en ambas puntas.
-    horario_nocturno = np.arange(('%sT%s:%s' % (date_entrada, io_nocturno[0][0], io_nocturno[0][1])), ('%sT%s:%s' % (date_entrada, io_nocturno[1][0], io_nocturno[1][1])), dtype='datetime64[m]') # TO-DO revisar acá cuando cambie date_entrada en ambas puntas de la expresion.
+    horario_madrugada = np.arange(f'{date_entrada}T{io_madrugada[0][0]}:{io_madrugada[0][1]}', f'{date_entrada}T{ io_madrugada[1][0]}:{io_madrugada[1][1]}', dtype='datetime64[m]')
+    horario_nocturno = np.arange(f'{date_entrada}T{io_nocturno[0][0]}:{io_nocturno[0][1]}', f'{date_entrada}T{io_nocturno[1][0]}:{io_nocturno[1][1]}', dtype='datetime64[m]')
     horarios_combinados = np.concatenate((horario_madrugada, horario_nocturno), axis=0)
     logging.info(f'el horario nocturno empieza a las {horario_madrugada[0]} y termina a las {horario_nocturno[-1]}')
     h_trabajadas_nocturnas = np.in1d(tiempo_trabajado, horarios_combinados)
@@ -50,7 +50,7 @@ def night_working_hours(entrada, salida, hnocturno_checkbox):
         total_night_worked_hs_asdecimal = 0
     return minutes_worked_en_nocturno_list, total_night_worked_hs_asdecimal, total_worked_hs
 
-def tiempos(dia_hora_entrada, dia_hora_salida, hs_por_jornada, hnocturno_checkbox):  # , night_working_hours # TO-FIX no está calculando bien las horas trabajadas ni extras.
+def tiempos(dia_hora_entrada, dia_hora_salida, hs_por_jornada, hnocturno_checkbox):
     dia_hora_entrada = datetime.datetime.strptime(dia_hora_entrada, '%Y-%m-%dT%H:%M') ## ahora es un objeto datetime.
     dia_hora_salida = datetime.datetime.strptime(dia_hora_salida, '%Y-%m-%dT%H:%M') ## ahora es un objeto datetime.
 
@@ -66,7 +66,7 @@ def tiempos(dia_hora_entrada, dia_hora_salida, hs_por_jornada, hnocturno_checkbo
     logging.info('\n'+"trasncurrió entre las dos fechas = %s minutos, que son unas %s horas" % (
         minutos_tiempo_transcurrido_totaljornada, horas_trasncurridas))
 
-    # Horario nocturno: de 21 a 06 hs (durante ese lapso se computa 1 hora por cada 50 minutos trabajados)
+    ## Horario nocturno: de 21 a 06 hs (durante ese lapso se computa 1 hora por cada 50 minutos trabajados)
     if hnocturno_checkbox == True:
         nwhs = night_working_hours(dia_hora_entrada.strftime("%Y-%m-%dT%H:%M"), dia_hora_salida.strftime("%Y-%m-%dT%H:%M"), hnocturno_checkbox) #  night_working_hours(horaminuto_entrada, horaminuto_salida, hnocturno_checkbox)
         # horas_trasncurridas = horas_trasncurridas + (self.night_working_hours(horaminuto_entrada, horaminuto_salida)[1] * 1.2) # 20% es el equivalente a la hora de 50min.
@@ -81,7 +81,10 @@ def tiempos(dia_hora_entrada, dia_hora_salida, hs_por_jornada, hnocturno_checkbo
 ## calculador final de totales a mostrar.
 def calcular_total( jor, factor_mult_extras, horas_trasncurridas, hs_por_jornada):
     if jor is None:
-        jor = "0.0"
+        # print('jor is none')
+        jor = 0.0
+    # elif type(jor) == str:
+    #     jor = float(jor.replace(",", ".") if "," in jor else jor) # TO-FIX no convierte string to float cuando no se ingresa valor ( en la interface Pyside). Buscar la forma de convertir.
     jor = float(jor.replace(",", ".") if "," in jor else jor)
 
     valor_hora = jor / hs_por_jornada

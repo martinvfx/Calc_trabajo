@@ -36,7 +36,7 @@ factor_mult_extras_label = jp.Label(text='Porcentaje por hora extra =', classes=
 start_workday_label = jp.Label(text='Inicio del trabajo =', classes=label_item_clas)
 end_workday_label = jp.Label(text='Final del trabajo =', classes=label_item_clas)
 start_workday_inbox = jp.Input(name='start_work', type='datetime-local', title='Indicar cuando empezó el trabajo', tabindex=3, classes=inbox_style, delete_flag=False)
-end_workday_inbox = jp.Input(name='end_work', type='datetime-local', title='Indicar cuando finalizó el trabajo', tabindex=4, classes=inbox_style, delete_flag=False) # TO-DO que el end no pueda ser anterior al start day.
+end_workday_inbox = jp.Input(name='end_work', type='datetime-local', title='Indicar cuando finalizó el trabajo', tabindex=4, classes=inbox_style, delete_flag=False)
 hs_por_jornada_inbox = jp.Input(type='number', title='Indicar cuantas horas tenés que trabajar diarimente por contrato.\n'
                                                      'Usualmente en cine son 12hs y en TV son 10hs'
                                 , value=12, tabindex=5, classes=inbox_style, delete_flag=False)
@@ -89,11 +89,16 @@ def dates_non_overlap(self, msg):
 
 
 async def result(self, msg):
+    if float(fee_inbox.value) == 0:
+        fee_inbox.set_classes('bg-red-700 font-bold text-white')
+    else:
+        fee_inbox.set_classes(inbox_style)
+
     result_display.delete_components()
     dates_non_overlap(self, msg)
     jor = str(fee_inbox.value)
     factor_mult_extras = float((factor_mult_extras_inbox.value /100) +1)
-    r = jp.P(text=operations_ctotal(jor, factor_mult_extras, operations_tiempos(start_workday_inbox.value, end_workday_inbox.value, hs_por_jornada_inbox.value, night_check.value)[2], hs_por_jornada_inbox.value))
+    r = jp.P(text=operations_ctotal(jor, factor_mult_extras, operations_tiempos(start_workday_inbox.value, end_workday_inbox.value, hs_por_jornada_inbox.value, night_check.checked)[2], hs_por_jornada_inbox.value))
     result.output = r.text
     result.val_hs_extras = operations_ctotal.__getattribute__("val_hs_extras")
     result.hs_ext_trabajadas = operations_ctotal.__getattribute__("hs_ext_trabajadas")
@@ -108,7 +113,7 @@ async def result(self, msg):
 def info_area_fn(self, msg):
     self.before = info_area.delete_components()
     info_area.set_class('visible')
-    t = operations_tiempos(start_workday_inbox.value, end_workday_inbox.value, hs_por_jornada_inbox.value, night_check.value)
+    t = operations_tiempos(start_workday_inbox.value, end_workday_inbox.value, hs_por_jornada_inbox.value, night_check.checked)
     def textlabel(self, value):
         txtemp = self.text.rstrip('.0123456789')
         self.text = txtemp + value
@@ -116,6 +121,12 @@ def info_area_fn(self, msg):
             after_num = self.text.split(':')
             self.text = after_num[0] + ': ' + value
         return self.text
+
+    if night_check.checked == True:
+        trab_un_total_label.text = 'Con nocturnas trabajaste: '
+    else:
+        trab_un_total_label.text ='Trabajaste en total: '
+
 
     ## funtion to return text labes values.
     trab_un_total_label.text = f'{textlabel(trab_un_total_label, str(round(t[2], 1)))} hs'
@@ -125,7 +136,7 @@ def info_area_fn(self, msg):
 
     info_area.add(trab_un_total_label, espacios, son_extras_label, espacios, cobrar_hs_extras_label, espacios, avalorde_label)
 
-@jp.SetRoute('/home')
+# @jp.SetRoute('/home')
 async def web_ui(self):
     wp = jp.WebPage()
     wp.title = 'Calcuador de jornada de Filmación'
@@ -155,6 +166,7 @@ async def web_ui(self):
     # calc_bton.on('before', info_area_fn)
     info_link.on('mouseover', change)
     info_link.on('mouseleave', change)
+    night_check.on('change', result)
 
     return wp
 
