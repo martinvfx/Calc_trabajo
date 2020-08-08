@@ -62,9 +62,8 @@ def tiempos(dia_hora_entrada, dia_hora_salida, hs_por_jornada, hnocturno_checkbo
     else:
         bloque_de_12hs = 1
 
-    logging.info('\n'+"Es una jornada mayor a %s" % hs_por_jornada) if horas_trasncurridas >= hs_por_jornada else None
-    logging.info('\n'+"trasncurrió entre las dos fechas = %s minutos, que son unas %s horas" % (
-        minutos_tiempo_transcurrido_totaljornada, horas_trasncurridas))
+    # logging.info('\n'+"Es una jornada mayor a %s" % hs_por_jornada) if horas_trasncurridas >= hs_por_jornada else None
+    # logging.info('\n'+"trasncurrió entre las dos fechas = %s minutos, que son unas %s horas" % ( minutos_tiempo_transcurrido_totaljornada, horas_trasncurridas))
 
     ## Horario nocturno: de 21 a 06 hs (durante ese lapso se computa 1 hora por cada 50 minutos trabajados)
     if hnocturno_checkbox == True:

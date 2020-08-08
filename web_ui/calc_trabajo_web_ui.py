@@ -142,10 +142,9 @@ async def web_ui(self):
     wp.title = 'Calcuador de jornada de Filmación'
     wp.favicon = "/CucardaVFXsup_fdoNegro.png"
 
-    main_div = jp.Div(a=wp , classes='bg-black py-2 px-2 rounded-lg shadow-xl lg:max-w-3xl  sm:max-w-2xl container mx-auto overflow-auto') #  flex   content-center flex-shrink-0 m-auto max-w-xl text-base sm:text-4xl lg:text-base
+    main_div = jp.Div(a=wp, classes='bg-black py-2 px-2 rounded-lg shadow-xl lg:max-w-3xl  sm:max-w-2xl  container min-width transform lg:scale-100 sm:scale-150 origin-top-left') # overflow-auto flex   content-center flex-shrink-0 m-auto max-w-xl text-base sm:text-4xl lg:text-base
     main_div.add(head_div)
-
-    app_box = jp.Div(a=main_div, classes='flex-col text-white content-center m-2 flex-shrink-0 ')
+    app_box = jp.Div(a=main_div, classes='flex-col text-white content-center m-2 flex-grow ') # flex-shrink-0
     d1_organizer = jp.Div(a=app_box, classes='flex border-gray-900 border-2')
     labels_for_data = jp.Div(a=d1_organizer, classes='text-align-left '+cell_style)
     data_input_column = jp.Div(a=d1_organizer, classes=cell_style)

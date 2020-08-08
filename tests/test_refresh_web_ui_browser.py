@@ -98,4 +98,4 @@ def loop_refresh(refresh_time=10):
 
 if __name__ == '__main__':
     start_setup()
-    loop_refresh(4)
+    loop_refresh(3)
